@@ -1,0 +1,4 @@
+WWUwifi is a utility whcih uses a users login credentials on the wwu network to 
+automatically authenticate on the wifi points around campus
+
+utility is currently functional on python 2.6 with dbus and NetworkManager running on ubuntu

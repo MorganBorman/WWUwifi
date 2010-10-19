@@ -9,7 +9,7 @@ from Credentials import *
 
 systems = ["linux", "windows", "osx", "loop"]
 
-current_system = "loop"
+current_system = "linux"
 
 if current_system == "linux":
 	from lin.events import loop
