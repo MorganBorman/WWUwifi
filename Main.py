@@ -6,10 +6,11 @@ from includes.mechanize import Browser
 from StatusIcon import *
 from Wifi import *
 from Credentials import *
+from System import SystemType 
 
 systems = ["linux", "windows", "osx", "loop"]
 
-current_system = "linux"
+current_system = SystemType() 
 
 if current_system == "linux":
 	from lin.events import loop
