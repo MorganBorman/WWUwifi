@@ -1,4 +1,7 @@
 import gtk
+from System import SystemType
+
+current_system = SystemType()
 
 class StatusIcon:
     def __init__(self, parent):
@@ -13,9 +16,9 @@ class StatusIcon:
 #	self.statusicon.connect("activate", self.click_event)
         self.statusicon.set_tooltip("WWU wifi")
         
-        window = gtk.Window()
-        window.show_all()
-        window.hide()
+        self.window = gtk.Window()
+        self.window.show_all()
+        self.window.hide()
         
         self.parent.logged = False
         
@@ -37,7 +40,11 @@ class StatusIcon:
 			login.connect("activate", self.login)
 
 		about.connect("activate", self.show_about_dialog)
-		quit.connect("activate", self.parent.quit)
+
+		if current_system == "linux":
+        		quit.connect("activate", self.parent.quit)
+		else:
+			quit.connect("activate", gtk.main_quit)
 
 		if self.parent.logged:
 			menu.append(logout)

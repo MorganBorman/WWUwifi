@@ -1,10 +1,20 @@
-#TODO: auto detect wireless card(s)
-from iwlibs import getNICnames, Wireless
+import wmi
+c = wmi.WMI()
+c = wmi.WMI(namespace="WMI")
 
-NIC_List = getNICnames()
 
-try:
-	wifi = Wireless(NIC_List[0])
-except:
-	print "Error getting wireless interface."
-	quit()
+class wireless:	
+	def getEssid(self):
+		ssid = ""
+		try:
+			rawssid = c.MSNdis_80211_ServiceSetIdentifier()[0].Ndis80211Ssid
+			length = rawssid[0]
+			rawssid = rawssid[4:4+length]
+
+			for byte in rawssid:
+				ssid = ssid + chr(byte)
+		except:
+			print "failed to get ssid"
+		return ssid
+
+wifi = wireless()

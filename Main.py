@@ -6,9 +6,7 @@ from includes.mechanize import Browser
 from StatusIcon import *
 from Wifi import *
 from Credentials import *
-from System import SystemType 
-
-systems = ["linux", "windows", "osx", "loop"]
+from System import SystemType, systems
 
 current_system = SystemType() 
 
@@ -103,7 +101,5 @@ class manager:
 		
 main = manager()
 
-if current_system == "loop":
-	main.MainLoop.run(main)	
-else:
+if current_system == 'linux':
 	main.MainLoop.run()

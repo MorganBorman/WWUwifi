@@ -11,3 +11,5 @@ def SystemType():
 	
 	#returns something like ('Ubuntu', '9.10', 'karmic') on linux
 	#platform.dist()
+
+systems = ["linux", "windows", "osx", "loop"]
