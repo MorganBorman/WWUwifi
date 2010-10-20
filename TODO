@@ -1,9 +1,12 @@
-Add pygtk dependancies to repository
+Add pygtk dependancies to repository (maybe not such a good idea since it's compiled for each os)
 *Windows functionality
 	->Working polling loop
-	->Working getEssid() function
 *OSX functionality
 	->Investigate event bus possibilties
-	->
+*Basic unix functionality
+	->make it work using only basic shell commands
+	->non-gtk based?
+*Android
+	->java...
 Use somesort of non-plaintext password storage
 
