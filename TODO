@@ -1,4 +1,9 @@
-
-
+Add pygtk dependancies to repository
+*Windows functionality
+	->Working polling loop
+	->Working getEssid() function
+*OSX functionality
+	->Investigate event bus possibilties
+	->
 Use somesort of non-plaintext password storage
 
