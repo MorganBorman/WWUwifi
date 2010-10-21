@@ -14,6 +14,8 @@ if current_system == "linux":
 	from lin.events import loop
 	
 elif current_system == "windows":
+	import sys
+	sys.path.append("win//gtkbin//") 
 	from win.events import loop
 	
 elif current_system == "osx":
@@ -41,19 +43,19 @@ class manager:
 		self.check_and_auth()
 		self.logged = False
 		
-		self.MainLoop = loop()
+		self.MainLoop = loop(self)
 
 	#when we get a signal from the wifi event loop we need to do some stuff
 	def on_signal(self, state):
 		if state == 0:
-			#disconnected signal
+			#print "disconnected signal"
 			self.statusicon.set_visibility(False)
 			self.logged = False
 		elif state == 1:
-			#connection established signal
+			#print "connection established signal"
 			self.check_and_auth()
 		elif state == 2:
-			#acquiring connection signal
+			#print "acquiring connection signal"
 			self.statusicon.set_blinking(True)
 
 				
