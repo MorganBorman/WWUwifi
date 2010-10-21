@@ -46,12 +46,14 @@ class manager:
 	#when we get a signal from the wifi event loop we need to do some stuff
 	def on_signal(self, state):
 		if state == 0:
+			#disconnected signal
 			self.statusicon.set_visibility(False)
 			self.logged = False
 		elif state == 1:
-			#print "connection established"
+			#connection established signal
 			self.check_and_auth()
 		elif state == 2:
+			#acquiring connection signal
 			self.statusicon.set_blinking(True)
 
 				
