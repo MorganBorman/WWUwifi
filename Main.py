@@ -3,9 +3,9 @@
 
 from includes.mechanize import Browser
 
-from StatusIcon import *
+import StatusIcon
 from Wifi import *
-from Credentials import *
+import Credentials
 from System import SystemType, systems
 
 current_system = SystemType() 
@@ -33,51 +33,86 @@ def get_title(html):
 	return html.split("</title>")[0].split("<title>")[1]
     	
 
-class manager:
+class Manager:
 	def __init__(self):
-		self.statusicon = StatusIcon(self)
+		self.statusicon = StatusIcon.StatusIcon(self)
+
+		self.CredentialManager = Credentials.CredentialManager(self)
 
 		self.browser = Browser()
 		self.browser.addheaders = [("User-agent", USER_AGENT)]
-	
-		self.check_and_auth()
+
 		self.logged = False
-		
-		self.MainLoop = loop(self)
+
+		self.check_initial_state()
+		if current_system == "windows":
+			self.MainLoop = loop(self)
+		else:
+			self.MainLoop = loop()
 
 	#when we get a signal from the wifi event loop we need to do some stuff
 	def on_signal(self, state):
 		if state == 0:
-			#print "disconnected signal"
+			print "disconnected signal"
 			self.statusicon.set_visibility(False)
 			self.logged = False
 		elif state == 1:
-			#print "connection established signal"
-			self.check_and_auth()
+			print "connection established signal"
+			self.on_connection()
 		elif state == 2:
-			#print "acquiring connection signal"
+			print "acquiring connection signal"
 			self.statusicon.set_blinking(True)
 
-				
-	def check_and_auth(self):
+	def on_password_change(self):
+		print "our stored password changed"
+		print self.CredentialManager.get_username()
+		print self.CredentialManager.get_password()
+		self.statusicon.set_blinking(True)
+		if self.wwu_auth():
+			self.logged = True
+			self.statusicon.set_blinking(False)
+
+	def on_connection(self):
+		print "on connection"
 		self.statusicon.set_blinking(False)
 		if is_wwu_wifi():
+			print "on wwu wifi"
 			self.statusicon.set_visibility(True)
 			if self.need_auth():
+				print "we need to auth"
 				self.statusicon.set_blinking(True)
-				self.wwu_auth()
+				if not self.wwu_auth():
+					print "we failed to auth"
+					#tries to log on if it failed this executes
+					self.CredentialManager.ask_user()
+				else:
+					print "we succeeded with auth"
+					self.logged = True
+					self.statusicon.set_blinking(False)
+			else:
+				print "we're already logged on"
+				self.logged = True
 				self.statusicon.set_blinking(False)
-			self.logged = True
 		else:
+			print "not wwu wifi"
 			self.statusicon.set_visibility(False)
 			self.logged = False
+				
+	
+	def check_initial_state(self):
+		#we need to figure out whether we're already on a wifi network
+		#and if so whether it's a wwu wireless network
+		#and if so whether we need to log on
+		
+		#this might eventually have some other stuff in it but right now we can
+		#just use the on_connection function
+		self.on_connection()
 		
 	def need_auth(self):
 		response = self.browser.open("http://www.blankwebpage.com/")
 		return get_title(response.read()) == "Web Authentication"
 
 	def wwu_auth(self, statusicon="stat"):
-		self.statusicon.set_blinking(True)
 		
 		self.browser.open(LOGIN_ADDRESS)
 
@@ -85,12 +120,12 @@ class manager:
 
 		self.browser.form.set_all_readonly(False)
 
-		self.browser["username"] = USERNAME
-		self.browser["password"] = PASSWORD
+		self.browser["username"] = self.CredentialManager.get_username()
+		self.browser["password"] = self.CredentialManager.get_password() 
 		self.browser["buttonClicked"] = "4"
 		self.browser.submit()
-		
-		self.statusicon.set_blinking(False)
+
+		return not (self.need_auth())
 
 	def wwu_de_auth(self, statusicon="stat"):
 		self.statusicon.set_blinking(True)
@@ -103,7 +138,7 @@ class manager:
 	def quit(self, statusicon="stat"):
 		self.MainLoop.quit()
 		
-main = manager()
+main = Manager()
 
 if current_system == 'linux':
 	main.MainLoop.run()
