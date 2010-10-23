@@ -3,6 +3,7 @@ import gtk
 class CredentialInput(gtk.Window):
 	def __init__(self, parent):
 		self.canceled = True
+		self.call_on_submit_function = None
 		
 		self.objparent = parent
 		super(CredentialInput, self).__init__()
@@ -43,17 +44,23 @@ class CredentialInput(gtk.Window):
 	def cancel(self, *args):
 		self.canceled = True
 		self.hide()
-		return False
+		self.call_on_exit_function()
+		return True
 
 	def submit(self, *args):
 		self.canceled = False
 		self.hide()
-		return False
+		self.objparent.cred_changed()
+		self.call_on_submit_function()
+		return True
 	
 	def show(self, username, password):
 		self.usernamebox.set_text(username)
 		self.passwordbox.set_text(password)
 		self.show_all()
+		
+	def call_on_submit(self, function):
+		self.call_on_submit_function = function
 
 	def hide(self):
 		self.hide_all()
@@ -72,6 +79,10 @@ class CredentialManager:
 		self.fetch_cred()
                 self.CredDia = CredentialInput(self)
 
+	def cred_changed(self):
+		self.Username = self.CredDia.password()
+		self.Password = self.CredDia.username()
+
         def get_username(self):
 		return self.Username
 
@@ -79,11 +90,8 @@ class CredentialManager:
 		return self.Password
 
 	def ask_user(self):
+		self.CredDia.call_on_submit(self.objparent.on_password_change)
 		self.CredDia.show(self.Username, self.Password)
-		if not self.CredDia.canceled:
-			self.Username = self.CredDia.password()
-			self.Password = self.CredDia.username()
-			self.objparent.on_password_change
 
 	def fetch_cred(self):
 		self.Username = ""
