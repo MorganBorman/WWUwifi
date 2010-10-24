@@ -1,7 +1,4 @@
 import gtk
-from System import SystemType
-
-current_system = SystemType()
 
 class StatusIcon:
     def __init__(self, parent):
@@ -19,8 +16,6 @@ class StatusIcon:
         self.window = gtk.Window()
         self.window.show_all()
         self.window.hide()
-        
-        self.parent.logged = False
         
     def click_event(self, widget, event):
 	if event.button == 1:
@@ -41,10 +36,7 @@ class StatusIcon:
 
 		about.connect("activate", self.show_about_dialog)
 
-		if current_system == "linux":
-        		quit.connect("activate", self.parent.quit)
-		else:
-			quit.connect("activate", gtk.main_quit)
+        	quit.connect("activate", self.parent.quit)
 
 		if self.parent.logged:
 			menu.append(logout)
@@ -62,8 +54,8 @@ class StatusIcon:
         about_dialog = gtk.AboutDialog()
 
         about_dialog.set_destroy_with_parent(True)
-        about_dialog.set_name("about wwu-auth")
-        about_dialog.set_version("0.1")
+        about_dialog.set_name("About WWUwifi auto-login")
+        about_dialog.set_version("0.15 - ubuntu")
         about_dialog.set_authors(["Morgan Borman"])
         		
         about_dialog.run()
@@ -76,9 +68,8 @@ class StatusIcon:
     	self.statusicon.set_blinking(blinking)
     	
     def logout(self, opt):
-    	self.parent.wwu_de_auth()
+    	self.parent.wwu_logout()
     	self.parent.logged = False
     	
     def login(self, opt):
-    	self.parent.wwu_auth()
-    	self.parent.logged = True
+    	self.parent.wwu_login()

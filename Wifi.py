@@ -1,21 +1,6 @@
-from System import SystemType, systems
+from lin.wlan import wifi
 
-current_system = SystemType() 
-
-if current_system == "linux":
-	from lin.wlan import wifi
-	
-elif current_system == "windows":
-	from win.wlan import wifi
-	
-elif current_system == "osx":
-	from osx.wlan import wifi
-	
-elif current_system == "loop":
-	from loop.wlan import wifi
-
-
-WWU_PUBLIC_WIFI_SSIDS = ["WWUwireless", "default"]
+WWU_PUBLIC_WIFI_SSIDS = ["WWUwireless"]
 
 def getSSID():
 	return wifi.getEssid()

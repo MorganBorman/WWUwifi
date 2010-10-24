@@ -1,4 +1,9 @@
 import gtk
+import gnomekeyring
+import glib
+
+APP_NAME = 'WWUwifi'
+KEYRING_NAME = 'login'
 
 class CredentialInput(gtk.Window):
 	def __init__(self, parent):
@@ -44,14 +49,14 @@ class CredentialInput(gtk.Window):
 	def cancel(self, *args):
 		self.canceled = True
 		self.hide()
-		self.call_on_exit_function()
 		return True
 
 	def submit(self, *args):
 		self.canceled = False
 		self.hide()
 		self.objparent.cred_changed()
-		self.call_on_submit_function()
+		if self.call_on_submit_function != None:
+			self.call_on_submit_function()
 		return True
 	
 	def show(self, username, password):
@@ -73,30 +78,43 @@ class CredentialInput(gtk.Window):
 
 class CredentialManager:
         def __init__(self, parent):
+        	glib.set_application_name(APP_NAME)
         	self.objparent = parent
-		self.Username = ""
-		self.Password = ""
-		self.fetch_cred()
                 self.CredDia = CredentialInput(self)
+		self.fetch_cred()
+
+	def get_keyring_item(self):
+		for id in gnomekeyring.list_item_ids_sync(KEYRING_NAME):
+			item = gnomekeyring.item_get_info_sync(KEYRING_NAME, id)
+			if item.get_display_name() == 'WWUwifi':
+				return item
+		return None
+		
+
 
 	def cred_changed(self):
-		self.Username = self.CredDia.password()
-		self.Password = self.CredDia.username()
+		info = {'Username': self.CredDia.username()}
+		gnomekeyring.item_create_sync(KEYRING_NAME, gnomekeyring.ITEM_GENERIC_SECRET, 'WWUwifi', info, self.CredDia.password(), True)
 
         def get_username(self):
-		return self.Username
+        	gnomekeyring_entry = self.get_keyring_item()
+		if gnomekeyring_entry != None:
+        		return gnomekeyring_entry.attributes['Username']
+	        else:
+	        	return ""
 
 	def get_password(self):
-		return self.Password
+		gnomekeyring_entry = self.get_keyring_item()
+		if gnomekeyring_entry != None:
+	        	return gnomekeyring_entry.get_secret()
+	        else:
+	        	return ""
 
 	def ask_user(self):
 		self.CredDia.call_on_submit(self.objparent.on_password_change)
-		self.CredDia.show(self.Username, self.Password)
+		self.CredDia.show(self.get_username(), self.get_password())
 
 	def fetch_cred(self):
-		self.Username = ""
-		self.Password = ""
-
-if __name__ == "__main__":
-    hello = CredentialInput()
-    gtk.main()
+		gnomekeyring_entry = self.get_keyring_item()
+		if gnomekeyring_entry == None:
+        		self.CredDia.show("", "")

@@ -6,23 +6,8 @@ from includes.mechanize import Browser
 import StatusIcon
 from Wifi import *
 import Credentials
-from System import SystemType, systems
 
-current_system = SystemType() 
-
-if current_system == "linux":
-	from lin.events import loop
-	
-elif current_system == "windows":
-	import sys
-	sys.path.append("win//gtkbin//") 
-	from win.events import loop
-	
-elif current_system == "osx":
-	from osx.events import loop
-	
-elif current_system == "loop":
-	from loop.events import loop
+from lin.events import loop
 
 USER_AGENT = "Mozilla/5.0 (X11; U; Linux i686; tr-TR; rv:1.8.1.9) Gecko/20071102 Pardus/2007 Firefox/2.0.0.9"
 LOGIN_ADDRESS = "https://wwu.wlan.wwu.edu/fs/customwebauth/login-dmca-focus.html?switch_url=https://wwu.wlan.wwu.edu/login.html&wlan=WWUwireless"
@@ -45,10 +30,7 @@ class Manager:
 		self.logged = False
 
 		self.check_initial_state()
-		if current_system == "windows":
-			self.MainLoop = loop(self)
-		else:
-			self.MainLoop = loop()
+		self.MainLoop = loop()
 
 	#when we get a signal from the wifi event loop we need to do some stuff
 	def on_signal(self, state):
@@ -68,7 +50,7 @@ class Manager:
 		print self.CredentialManager.get_username()
 		print self.CredentialManager.get_password()
 		self.statusicon.set_blinking(True)
-		if self.wwu_auth():
+		if self.wwu_login():
 			self.logged = True
 			self.statusicon.set_blinking(False)
 
@@ -81,7 +63,7 @@ class Manager:
 			if self.need_auth():
 				print "we need to auth"
 				self.statusicon.set_blinking(True)
-				if not self.wwu_auth():
+				if not self.wwu_login():
 					print "we failed to auth"
 					#tries to log on if it failed this executes
 					self.CredentialManager.ask_user()
@@ -112,7 +94,7 @@ class Manager:
 		response = self.browser.open("http://www.blankwebpage.com/")
 		return get_title(response.read()) == "Web Authentication"
 
-	def wwu_auth(self, statusicon="stat"):
+	def wwu_login(self, *args):
 		
 		self.browser.open(LOGIN_ADDRESS)
 
@@ -123,11 +105,13 @@ class Manager:
 		self.browser["username"] = self.CredentialManager.get_username()
 		self.browser["password"] = self.CredentialManager.get_password() 
 		self.browser["buttonClicked"] = "4"
-		self.browser.submit()
+		response = self.browser.submit()
+		
+		print get_title(response.read())
+		
+		return get_title(response.read()) == ""#put successful-login page title here
 
-		return not (self.need_auth())
-
-	def wwu_de_auth(self, statusicon="stat"):
+	def wwu_logout(self, statusicon="stat"):
 		self.statusicon.set_blinking(True)
 		
 		response = self.browser.open(LOGOUT_ADDRESS)
@@ -139,6 +123,4 @@ class Manager:
 		self.MainLoop.quit()
 		
 main = Manager()
-
-if current_system == 'linux':
-	main.MainLoop.run()
+main.MainLoop.run()
