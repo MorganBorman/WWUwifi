@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from includes.mechanize import Browser
+from mechanize import Browser
 
 import StatusIcon
 from Wifi import *
