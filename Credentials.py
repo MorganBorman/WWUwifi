@@ -28,6 +28,7 @@ class CredentialInput(gtk.Window):
 		self.uname_txt = gtk.Label("Username:")
 		self.h_uname_box.add(self.uname_txt)
 		self.usernamebox = gtk.Entry(15)
+		self.usernamebox.connect("key-press-event", self.on_keypress)
 		self.h_uname_box.add(self.usernamebox)
 		self.vbox.add(self.h_uname_box)
 
@@ -35,6 +36,7 @@ class CredentialInput(gtk.Window):
 		self.upass_txt = gtk.Label("Password:")
 		self.h_upass_box.add(self.upass_txt)
 		self.passwordbox = gtk.Entry(15)
+		self.passwordbox.connect("key-press-event", self.on_keypress)
 		self.passwordbox.set_visibility(False)
 		self.h_upass_box.add(self.passwordbox)
 
@@ -45,6 +47,19 @@ class CredentialInput(gtk.Window):
 		self.vbox.add(self.button)
 
 	        self.add(self.vbox)
+	        
+	def on_keypress(self, widget, event):
+		keyname = gtk.gdk.keyval_name(event.keyval)
+		if keyname == "Return":
+			if widget == self.usernamebox:
+				self.focus_on_password()
+			elif widget == self.passwordbox:
+				self.submit()
+		elif keyname == "Escape":
+			self.cancel()
+
+	def focus_on_password(self, *args):
+		self.passwordbox.grab_focus()
 
 	def cancel(self, *args):
 		self.canceled = True

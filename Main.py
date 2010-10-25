@@ -35,18 +35,18 @@ class Manager:
 	#when we get a signal from the wifi event loop we need to do some stuff
 	def on_signal(self, state):
 		if state == 0:
-			print "disconnected signal"
+			#print "disconnected signal"
 			self.statusicon.set_visibility(False)
 			self.logged = False
 		elif state == 1:
-			print "connection established signal"
+			#print "connection established signal"
 			self.on_connection()
 		elif state == 2:
-			print "acquiring connection signal"
+			#print "acquiring connection signal"
 			self.statusicon.set_blinking(True)
 
 	def on_password_change(self):
-		print "our stored password changed"
+		#print "our stored password changed"
 		print self.CredentialManager.get_username()
 		print self.CredentialManager.get_password()
 		self.statusicon.set_blinking(True)
@@ -55,28 +55,28 @@ class Manager:
 			self.statusicon.set_blinking(False)
 
 	def on_connection(self):
-		print "on connection"
+		#print "on connection"
 		self.statusicon.set_blinking(False)
 		if is_wwu_wifi():
-			print "on wwu wifi"
+			#print "on wwu wifi"
 			self.statusicon.set_visibility(True)
 			if self.need_auth():
-				print "we need to auth"
+				#print "we need to auth"
 				self.statusicon.set_blinking(True)
 				if not self.wwu_login():
-					print "we failed to auth"
+					#print "we failed to auth"
 					#tries to log on if it failed this executes
 					self.CredentialManager.ask_user()
 				else:
-					print "we succeeded with auth"
+					#print "we succeeded with auth"
 					self.logged = True
 					self.statusicon.set_blinking(False)
 			else:
-				print "we're already logged on"
+				#print "we're already logged on"
 				self.logged = True
 				self.statusicon.set_blinking(False)
 		else:
-			print "not wwu wifi"
+			#print "not wwu wifi"
 			self.statusicon.set_visibility(False)
 			self.logged = False
 				
