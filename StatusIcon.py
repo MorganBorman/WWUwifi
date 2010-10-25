@@ -5,13 +5,13 @@ class StatusIcon:
     
     	self.parent = parent
     
-    	iconpath = "WWU.gif"
+    	iconpath = "WWUwifi.svg"
     
         self.statusicon = gtk.StatusIcon()
         self.statusicon.set_from_file(iconpath)
         self.statusicon.connect("button_press_event", self.click_event)
 #	self.statusicon.connect("activate", self.click_event)
-        self.statusicon.set_tooltip("WWU wifi")
+        self.statusicon.set_tooltip("WWUwifi")
         
         self.window = gtk.Window()
         self.window.show_all()
