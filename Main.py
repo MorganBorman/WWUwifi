@@ -40,7 +40,7 @@ class Manager:
 		self.logged = False
 
 		self.check_initial_state()
-		self.MainLoop = loop()
+		self.MainLoop = loop(self)
 
 	#when we get a signal from the wifi event loop we need to do some stuff
 	def on_signal(self, state):
@@ -64,28 +64,29 @@ class Manager:
 				self.statusicon.set_blinking(False)
 
 	def on_connection(self):
-		#print "on connection"
+		print "on connection"
 		self.statusicon.set_blinking(False)
 		if is_wwu_wifi():
-			#print "on wwu wifi"
+			print "on wwu wifi"
 			self.statusicon.set_visibility(True)
 			if self.need_auth():
-				#print "we need to auth"
+				print "we need to auth"
 				self.statusicon.set_blinking(True)
 				if not self.wwu_login():
-					#print "we failed to auth"
+					print "we failed to auth"
 					#tries to log on if it failed this executes
 					self.CredentialManager.ask_user()
 				else:
-					#print "we succeeded with auth"
+					print "we succeeded with auth"
 					self.logged = True
 					self.statusicon.set_blinking(False)
 			else:
-				#print "we're already logged on"
+				print "we're already logged on"
 				self.logged = True
 				self.statusicon.set_blinking(False)
 		else:
-			#print "not wwu wifi"
+			print "not wwu wifi"
+			self.statusicon.set_blinking(False)
 			self.statusicon.set_visibility(False)
 			self.logged = False
 				
@@ -104,7 +105,8 @@ class Manager:
 		return get_title(response.read()) == "Web Authentication"
 
 	def wwu_login(self, *args):
-		
+		print "logging in..."
+		self.statusicon.set_blinking(True)
 		self.browser.open(LOGIN_ADDRESS)
 
 		self.browser.select_form("MyForm")
@@ -116,17 +118,21 @@ class Manager:
 		self.browser["buttonClicked"] = "4"
 		response = self.browser.submit()
 		
-		print get_title(response.read())
+		title = get_title(response.read())
 		
-		return get_title(response.read()) == ""#put successful-login page title here
+		self.statusicon.set_blinking(False)
+		print "Logged in"
+		return title == "Logged In"
 
 	def wwu_logout(self, statusicon="stat"):
+		print "logging out..."
 		self.statusicon.set_blinking(True)
 		
 		response = self.browser.open(LOGOUT_ADDRESS)
 		
 		self.browser.select_form(nr=0)
 		self.browser.submit()
+		print "Logged out"
 		
 	def quit(self, statusicon="stat"):
 		self.MainLoop.quit()
