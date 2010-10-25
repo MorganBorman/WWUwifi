@@ -3,7 +3,7 @@ import gnomekeyring
 import glib
 
 APP_NAME = 'WWUwifi'
-KEYRING_NAME = 'login'
+KEYRING_NAME = gnomekeyring.get_default_keyring_sync()
 
 class CredentialInput(gtk.Window):
 	def __init__(self, parent):
@@ -102,7 +102,7 @@ class CredentialManager:
 		for id in gnomekeyring.list_item_ids_sync(KEYRING_NAME):
 			item = gnomekeyring.item_get_info_sync(KEYRING_NAME, id)
 			if item.get_display_name() == 'WWUwifi':
-				return item
+				return (id, item)
 		return None
 		
 
@@ -114,18 +114,21 @@ class CredentialManager:
         def get_username(self):
         	gnomekeyring_entry = self.get_keyring_item()
 		if gnomekeyring_entry != None:
-        		return gnomekeyring_entry.attributes['Username']
+			id, gnomekeyring_entry = gnomekeyring_entry
+			attributes = gnomekeyring.item_get_attributes_sync(None, id)
+        		return attributes['Username']
 	        else:
 	        	return ""
 
 	def get_password(self):
 		gnomekeyring_entry = self.get_keyring_item()
 		if gnomekeyring_entry != None:
+			id, gnomekeyring_entry = gnomekeyring_entry
 	        	return gnomekeyring_entry.get_secret()
 	        else:
 	        	return ""
 
-	def ask_user(self):
+	def ask_user(self, *args):
 		self.CredDia.call_on_submit(self.objparent.on_password_change)
 		self.CredDia.show(self.get_username(), self.get_password())
 

@@ -20,6 +20,17 @@ class StatusIcon:
     def click_event(self, widget, event):
 	if event.button == 1:
 		menu = gtk.Menu()
+		
+		config_menu = gtk.Menu()
+		startup = gtk.MenuItem("Startup")
+		startup.connect("activate", self.parent.startup.show)
+		credentials = gtk.MenuItem("Credentials")
+		credentials.connect("activate", self.parent.CredentialManager.ask_user)
+		config_menu.append(startup)
+		config_menu.append(credentials)
+		
+		config = gtk.MenuItem("Config")
+		config.set_submenu(config_menu)
 
 		if self.parent.logged:
 			logout = gtk.MenuItem("Logout")
@@ -42,6 +53,8 @@ class StatusIcon:
 			menu.append(logout)
 		else:
 			menu.append(login)
+			
+		menu.append(config)
 
 		menu.append(about)
 		menu.append(quit)
@@ -54,7 +67,7 @@ class StatusIcon:
         about_dialog = gtk.AboutDialog()
 
         about_dialog.set_destroy_with_parent(True)
-        about_dialog.set_name("About WWUwifi auto-login")
+        about_dialog.set_name("WWUwifi auto-login")
         about_dialog.set_version("0.15 - ubuntu")
         about_dialog.set_authors(["Morgan Borman"])
         		

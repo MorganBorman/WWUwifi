@@ -7,6 +7,10 @@ import StatusIcon
 from Wifi import *
 import Credentials
 
+from Startup import startupquestion
+
+from Configuration import Configuration
+
 from lin.events import loop
 
 USER_AGENT = "Mozilla/5.0 (X11; U; Linux i686; tr-TR; rv:1.8.1.9) Gecko/20071102 Pardus/2007 Firefox/2.0.0.9"
@@ -21,6 +25,12 @@ def get_title(html):
 class Manager:
 	def __init__(self):
 		self.statusicon = StatusIcon.StatusIcon(self)
+
+		self.config = Configuration(self)
+		
+		self.startup = startupquestion(self)
+		if self.config.read("ask on startup") or self.config.read("ask on startup") == None:
+			self.startup.show()
 
 		self.CredentialManager = Credentials.CredentialManager(self)
 
@@ -47,12 +57,11 @@ class Manager:
 
 	def on_password_change(self):
 		#print "our stored password changed"
-		print self.CredentialManager.get_username()
-		print self.CredentialManager.get_password()
-		self.statusicon.set_blinking(True)
-		if self.wwu_login():
-			self.logged = True
-			self.statusicon.set_blinking(False)
+		if is_wwu_wifi():
+			self.statusicon.set_blinking(True)
+			if self.wwu_login():
+				self.logged = True
+				self.statusicon.set_blinking(False)
 
 	def on_connection(self):
 		#print "on connection"
