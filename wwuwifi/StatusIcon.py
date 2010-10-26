@@ -5,7 +5,7 @@ class StatusIcon:
     
     	self.parent = parent
     
-    	iconpath = "WWUwifi.svg"
+    	iconpath = "/usr/share/pixmaps/wwuwifi.png"
     
         self.statusicon = gtk.StatusIcon()
         self.statusicon.set_from_file(iconpath)

@@ -2,7 +2,7 @@ import gtk
 import gnomekeyring
 import glib
 
-APP_NAME = 'WWUwifi'
+APP_NAME = 'wwuwifi'
 KEYRING_NAME = gnomekeyring.get_default_keyring_sync()
 
 class CredentialInput(gtk.Window):
@@ -14,7 +14,7 @@ class CredentialInput(gtk.Window):
 		super(CredentialInput, self).__init__()
 		
 		valign = gtk.Alignment(0, 1, 0, 0)
-		self.set_title("WWUwifi - Credentials")
+		self.set_title("wwuWifi - Credentials")
 		self.set_size_request(300, 100) 
 		self.set_position(gtk.WIN_POS_CENTER)
 
@@ -101,7 +101,7 @@ class CredentialManager:
 	def get_keyring_item(self):
 		for id in gnomekeyring.list_item_ids_sync(KEYRING_NAME):
 			item = gnomekeyring.item_get_info_sync(KEYRING_NAME, id)
-			if item.get_display_name() == 'WWUwifi':
+			if item.get_display_name() == APP_NAME:
 				return (id, item)
 		return None
 		
@@ -109,7 +109,7 @@ class CredentialManager:
 
 	def cred_changed(self):
 		info = {'Username': self.CredDia.username()}
-		gnomekeyring.item_create_sync(KEYRING_NAME, gnomekeyring.ITEM_GENERIC_SECRET, 'WWUwifi', info, self.CredDia.password(), True)
+		gnomekeyring.item_create_sync(KEYRING_NAME, gnomekeyring.ITEM_GENERIC_SECRET, APP_NAME, info, self.CredDia.password(), True)
 
         def get_username(self):
         	gnomekeyring_entry = self.get_keyring_item()

@@ -3,15 +3,15 @@
 
 from mechanize import Browser
 
-import StatusIcon
-from Wifi import *
-import Credentials
+import wwuwifi.StatusIcon as StatusIcon
+from wwuwifi.Wifi import *
+import wwuwifi.Credentials as Credentials
 
-from Startup import startupquestion
+from wwuwifi.Startup import startupquestion
 
-from Configuration import Configuration
+from wwuwifi.Configuration import Configuration
 
-from lin.events import loop
+from wwuwifi.lin.events import loop
 
 USER_AGENT = "Mozilla/5.0 (X11; U; Linux i686; tr-TR; rv:1.8.1.9) Gecko/20071102 Pardus/2007 Firefox/2.0.0.9"
 LOGIN_ADDRESS = "https://wwu.wlan.wwu.edu/fs/customwebauth/login-dmca-focus.html?switch_url=https://wwu.wlan.wwu.edu/login.html&wlan=WWUwireless"

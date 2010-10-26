@@ -1,4 +1,4 @@
-from lin.wlan import wifi
+from wwuwifi.lin.wlan import wifi
 
 WWU_PUBLIC_WIFI_SSIDS = ["WWUwireless", "default"]
 

@@ -2,9 +2,9 @@ import pickle
 import os
 import shutil
 
-FILENAME = "~/.WWUwifi.conf"
+FILENAME = "~/.wwuwifi.conf"
 FILENAME = os.path.expanduser(FILENAME)
-STARTUP_FILENAME = "WWUwifi.desktop"
+STARTUP_FILENAME = "wwuwifi.desktop"
 STARTUP_DIRECTORY = "~/.config/autostart/"
 STARTUP_DIRECTORY = os.path.expanduser(STARTUP_DIRECTORY)
 STARTUP_PATH = STARTUP_DIRECTORY + STARTUP_FILENAME
@@ -12,11 +12,11 @@ STARTUP_PATH = STARTUP_DIRECTORY + STARTUP_FILENAME
 STARTUP_CONTENTS = """
 [Desktop Entry]
 Type=Application
-Exec=/usr/bin/WWUwifi
-Icon=WWUwifi.svg
+Exec=/usr/bin/wwuwifi
+Icon=wwuwifi.png
 Hidden=false
 NoDisplay=false
-Name=WWUwifi
+Name=wwuwifi
 Comment=Login automation for wwu wireless points
 X-GNOME-Autostart-enabled="""
 

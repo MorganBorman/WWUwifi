@@ -1,0 +1,15 @@
+Source: wwuwifi
+Section: net
+Priority: extra
+Maintainer: Morgan Borman <morgan.borman@gmail.com>
+Build-Depends: cdbs (>= 0.4.49), debhelper (>= 7), python (>= 2.6), python-support
+Standards-Version: 3.8.4
+Homepage: http://github.com/MorganBorman/WWUwifi
+
+Package: wwuwifi
+Architecture: all
+Depends: python, python-gnomekeyring, python-dbus, python-gnome2, python-mechanize
+XS-Python-Version: >= 2.6
+Description: An automatic login utility for WWU campus wireless access points
+ Utilizes gnome-keyring, dbus, and pygtk to accomplish the task of
+ keeping you from those pesky login pages

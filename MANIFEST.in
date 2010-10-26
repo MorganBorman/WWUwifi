@@ -1,0 +1,17 @@
+include wwuwifi/lin/
+include wwuwifi/lin/events.py
+include wwuwifi/lin/flags.py
+include wwuwifi/lin/__init__.py
+include wwuwifi/lin/iwlibs.py
+include wwuwifi/lin/wlan.py
+
+include wwuwifi/wwuwifi
+include wwuwifi/Configuration.py
+include wwuwifi/Credentials.py
+include wwuwifi/Startup.py
+include wwuwifi/StatusIcon.py
+include wwuwifi/Wifi.py
+
+include wwuwifi/data/
+include wwuwifi/data/wwuwifi.desktop
+include wwuwifi/data/wwuwifi.png

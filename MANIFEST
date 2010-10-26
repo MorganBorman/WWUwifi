@@ -1,0 +1,15 @@
+setup.py
+wwuwifi/Configuration.py
+wwuwifi/Credentials.py
+wwuwifi/Startup.py
+wwuwifi/StatusIcon.py
+wwuwifi/Wifi.py
+wwuwifi/__init__.py
+wwuwifi/wwuwifi
+wwuwifi/data/wwuwifi.desktop
+wwuwifi/data/wwuwifi.png
+wwuwifi/lin/__init__.py
+wwuwifi/lin/events.py
+wwuwifi/lin/flags.py
+wwuwifi/lin/iwlibs.py
+wwuwifi/lin/wlan.py
