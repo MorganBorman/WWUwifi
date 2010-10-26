@@ -1,6 +1,6 @@
 from wwuwifi.lin.wlan import wifi
 
-WWU_PUBLIC_WIFI_SSIDS = ["WWUwireless", "default"]
+WWU_PUBLIC_WIFI_SSIDS = ["WWUwireless"]
 
 def getSSID():
 	return wifi.getEssid()
