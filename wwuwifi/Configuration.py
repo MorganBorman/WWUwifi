@@ -13,7 +13,7 @@ STARTUP_CONTENTS = """
 [Desktop Entry]
 Type=Application
 Exec=/usr/bin/wwuwifi
-Icon=wwuwifi.png
+Icon=/usr/share/pixmaps/wwuwifi.png
 Hidden=false
 NoDisplay=false
 Name=wwuwifi
